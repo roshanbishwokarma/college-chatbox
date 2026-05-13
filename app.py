@@ -30,7 +30,6 @@ def chatbot():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # Get form data
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
@@ -38,37 +37,22 @@ def register():
         username = request.form['username']
         password = request.form['password']
 
-        # Connect to database
         conn = sqlite3.connect("chatbot.db")
         cursor = conn.cursor()
 
-        # Directly insert user (no duplicate check)
         cursor.execute("""
             INSERT INTO users (
-                first_name,
-                last_name,
-                email,
-                phone,
-                username,
-                password
+                first_name, last_name, email, phone, username, password
             ) VALUES (?, ?, ?, ?, ?, ?)
         """, (
-            first_name,
-            last_name,
-            email,
-            phone,
-            username,
-            password
+            first_name, last_name, email, phone, username, password
         ))
 
-        # Save changes and close connection
         conn.commit()
         conn.close()
 
-        # Redirect to login page after successful registration
         return redirect('/login')
 
-    # Show registration page
     return render_template('register.html')
 
 # Login page
