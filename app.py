@@ -30,29 +30,57 @@ def chatbot():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        email = request.form['email']
-        phone = request.form['phone']
-        username = request.form['username']
-        password = request.form['password']
+        # Get data from the registration form
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-        conn = sqlite3.connect("chatbot.db")
-        cursor = conn.cursor()
+        try:
+            # Connect to SQLite database
+            conn = sqlite3.connect("chatbot.db")
+            cursor = conn.cursor()
 
-        cursor.execute("""
-            INSERT INTO users (
-                first_name, last_name, email, phone, username, password
-            ) VALUES (?, ?, ?, ?, ?, ?)
-        """, (
-            first_name, last_name, email, phone, username, password
-        ))
+            # Insert new user into users table
+            cursor.execute("""
+                INSERT INTO users (
+                    first_name,
+                    last_name,
+                    email,
+                    phone,
+                    username,
+                    password
+                )
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (
+                first_name,
+                last_name,
+                email,
+                phone,
+                username,
+                password
+            ))
 
-        conn.commit()
-        conn.close()
+            # Save changes
+            conn.commit()
+            conn.close()
 
-        return redirect('/login')
+            # Redirect to login page after successful registration
+            return redirect('/login')
 
+        except Exception as e:
+            # Close connection if open
+            try:
+                conn.close()
+            except:
+                pass
+
+            # Show the actual error message in the browser
+            return f"Registration Error: {e}"
+
+    # If GET request, show registration page
     return render_template('register.html')
 
 # Login page
