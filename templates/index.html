@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Chatbot</title>
 
     <style>
@@ -119,24 +116,17 @@ button:hover {
 <body>
 
 <div class="chat-container">
-        <div class="chat-header">
-            <h2>R O S H &hearts; N</h2>
-        </div>
 
-        <div id="chatbox"></div>
+    <!-- CHAT AREA -->
+    <div id="chat-box" class="chat-box"></div>
 
-        <div class="input-area">
-            <input
-                type="text"
-                id="userInput"
-                placeholder="Type your message..."
-                onkeypress="if(event.key === 'Enter') sendMessage()"
-            >
-            <button onclick="sendMessage()">Send</button>
-        </div>
+    <!-- INPUT AREA -->
+    <div class="input-box">
+        <input type="text" id="user-input" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</div>
 
 <script>
 function sendMessage() {

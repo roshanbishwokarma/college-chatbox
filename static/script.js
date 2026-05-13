@@ -1,71 +1,52 @@
 function sendMessage() {
-    let input = document.getElementById("userInput");
+    let input = document.getElementById("user-input");
     let message = input.value.trim();
 
     if (message === "") return;
 
-    let chatBox = document.getElementById("chatbox");
+    let chatBox = document.getElementById("chat-box");
 
-    // USER MESSAGE
+    // User message
     chatBox.innerHTML += `
-        <div class="message user">${message}</div>
+        <div class="user-message">
+            <div class="bubble user">${message}</div>
+        </div>
     `;
-
-    input.value = "";
-
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    // Typing indicator
-    let typing = document.createElement("div");
-    typing.className = "message bot";
-    typing.id = "typing";
-    typing.innerHTML = "Bot is typing...";
-
-    chatBox.appendChild(typing);
 
     fetch("/get", {
         method: "POST",
-        body: new URLSearchParams({
-            msg: message
-        }),
+        body: new URLSearchParams({ msg: message }),
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         }
     })
     .then(response => response.text())
     .then(data => {
+    // Create bot message container
+    let botDiv = document.createElement("div");
+    botDiv.className = "bot-message";
 
-        let typingElement = document.getElementById("typing");
+    let bubble = document.createElement("div");
+    bubble.className = "bubble bot";
+    bubble.innerText = "Typing...";
 
-        if (typingElement) {
-            typingElement.remove();
-        }
+    botDiv.appendChild(bubble);
+    chatBox.appendChild(botDiv);
 
-        chatBox.innerHTML += `
-            <div class="message bot">${data}</div>
-        `;
+    chatBox.scrollTop = chatBox.scrollHeight;
 
+    // Replace typing with actual message
+    setTimeout(() => {
+        bubble.innerText = data;
         chatBox.scrollTop = chatBox.scrollHeight;
-    })
-    .catch(error => {
-        console.log(error);
-    });
+    }, 1000);
+});
+    input.value = "";
 }
 
-// ENTER KEY SUPPORT
-document.addEventListener("DOMContentLoaded", function() {
-
-    let input = document.getElementById("userInput");
-
-    if (input) {
-        input.addEventListener("keypress", function(event) {
-
-            if (event.key === "Enter") {
-                event.preventDefault();
-                sendMessage();
-            }
-
-        });
+// Enter key support
+document.getElementById("user-input").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        sendMessage();
     }
-
 });
