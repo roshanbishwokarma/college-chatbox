@@ -79,3 +79,48 @@ body {
         width: 100%;
     }
 }
+/* Mobile Responsive Fix */
+@media (max-width: 768px) {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .container,
+    .chat-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    #chatbox {
+        height: calc(100vh - 170px) !important;
+        overflow-y: auto !important;
+    }
+
+    .input-area {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    #userInput,
+    .input-area input {
+        width: 100% !important;
+        font-size: 16px !important;
+        padding: 12px !important;
+        box-sizing: border-box;
+    }
+
+    .input-area button,
+    button {
+        width: 100% !important;
+        font-size: 16px !important;
+        padding: 12px !important;
+        box-sizing: border-box;
+    }
+}
