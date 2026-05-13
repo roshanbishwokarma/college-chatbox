@@ -1,42 +1,40 @@
 function sendMessage() {
+    // Get input field and chatbox
     const input = document.getElementById("userInput");
     const chatBox = document.getElementById("chatbox");
 
+    // Check if elements exist
     if (!input || !chatBox) {
-        console.error("Input box or chatbox not found.");
+        console.error("userInput or chatbox element not found.");
         return;
     }
 
+    // Get user message
     const message = input.value.trim();
 
+    // Stop if message is empty
     if (message === "") {
         return;
     }
 
-    // Show user message
+    // Display user message
     chatBox.innerHTML += `
-        <div class="user-message">
-            <div class="bubble user">${message}</div>
-        </div>
+        <div class="message user">${message}</div>
     `;
 
-    // Clear input
+    // Clear input field
     input.value = "";
 
     // Scroll to bottom
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    // Show typing indicator
-    const botDiv = document.createElement("div");
-    botDiv.className = "bot-message";
+    // Create typing indicator
+    const typing = document.createElement("div");
+    typing.className = "message bot";
+    typing.id = "typing";
+    typing.innerHTML = "Bot is typing...";
 
-    const bubble = document.createElement("div");
-    bubble.className = "bubble bot";
-    bubble.innerText = "Typing...";
-
-    botDiv.appendChild(bubble);
-    chatBox.appendChild(botDiv);
-
+    chatBox.appendChild(typing);
     chatBox.scrollTop = chatBox.scrollHeight;
 
     // Send message to Flask backend
@@ -49,16 +47,39 @@ function sendMessage() {
     })
     .then(response => response.text())
     .then(data => {
-        bubble.innerText = data;
+        // Remove typing indicator
+        const typingElement = document.getElementById("typing");
+        if (typingElement) {
+            typingElement.remove();
+        }
+
+        // Show bot response
+        chatBox.innerHTML += `
+            <div class="message bot">${data}</div>
+        `;
+
+        // Scroll to bottom
         chatBox.scrollTop = chatBox.scrollHeight;
     })
     .catch(error => {
-        bubble.innerText = "Error: Unable to connect to server.";
-        console.error("Fetch error:", error);
+        console.error("Error:", error);
+
+        // Remove typing indicator
+        const typingElement = document.getElementById("typing");
+        if (typingElement) {
+            typingElement.remove();
+        }
+
+        // Show error message
+        chatBox.innerHTML += `
+            <div class="message bot">Error: Unable to connect to server.</div>
+        `;
+
+        chatBox.scrollTop = chatBox.scrollHeight;
     });
 }
 
-// Run after page loads
+// Enter key support
 document.addEventListener("DOMContentLoaded", function () {
     const input = document.getElementById("userInput");
 
