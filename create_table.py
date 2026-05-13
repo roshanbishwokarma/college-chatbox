@@ -1,8 +1,32 @@
 import sqlite3
 
+# Connect to database
 conn = sqlite3.connect("chatbot.db")
 cursor = conn.cursor()
 
+# Create chatbot responses table
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS responses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    keyword TEXT,
+    response TEXT
+)
+""")
+
+# Create users table (duplicates allowed)
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT,
+    last_name TEXT,
+    email TEXT,
+    phone TEXT,
+    username TEXT,
+    password TEXT
+)
+""")
+
+# Create chat history table
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS chat_history (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -12,7 +36,8 @@ CREATE TABLE IF NOT EXISTS chat_history (
 )
 """)
 
+# Save and close
 conn.commit()
 conn.close()
 
-print("chat_history table created successfully!")
+print("Database and all tables created successfully!")

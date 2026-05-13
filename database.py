@@ -1,9 +1,10 @@
 import sqlite3
 
+# Connect to SQLite database
 conn = sqlite3.connect("chatbot.db")
 cursor = conn.cursor()
 
-# Chatbot responses table
+# Create chatbot responses table
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS responses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,7 +12,8 @@ CREATE TABLE IF NOT EXISTS responses (
     response TEXT
 )
 ''')
-#user table
+
+# Create users table (no UNIQUE constraint on username)
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,11 +21,12 @@ CREATE TABLE IF NOT EXISTS users (
     last_name TEXT,
     email TEXT,
     phone TEXT,
-    username TEXT UNIQUE,
+    username TEXT,
     password TEXT
 )
 ''')
 
+# Save changes and close connection
 conn.commit()
 conn.close()
 
